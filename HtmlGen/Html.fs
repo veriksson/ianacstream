@@ -13,28 +13,35 @@ type Attr =
     | Method of string
     | Rel of string
     | Href of string
+    | Integrity of string
+    | CrossOrigin of string
 
 type Node = 
     | Document of Node seq
     | Element of string * Attr seq * Node seq
     | ClosedElement of string * Attr seq
     | Text of string
+    | Empty
 
 let renderAttrs (sb : StringBuilder) attrs = 
+    let write attrName attrValue =
+        sb.AppendFormat(" {0}=\"{1}\"", attrName, attrValue) |> ignore
     for attr in attrs do
         match attr with
         | Style(kvps) -> 
             sb.Append(" style=\"") |> ignore
             kvps |> Seq.iter (fun (k, v) -> sb.AppendFormat("{0}:{1};", k, v) |> ignore)
             sb.Append("\"") |> ignore
-        | Id(id) -> sb.AppendFormat(" id=\"{0}\"", id) |> ignore
-        | Class(cls) -> sb.AppendFormat(" class=\"{0}\"", (String.concat " " cls)) |> ignore
-        | Type(typ) -> sb.AppendFormat(" type=\"{0}\"", typ) |> ignore
-        | Src(src) -> sb.AppendFormat(" src=\"{0}\"", src) |> ignore
-        | Action(act) -> sb.AppendFormat(" action=\"{0}\"", act) |> ignore
-        | Method(met) -> sb.AppendFormat(" method=\"{0}\"", met) |> ignore
-        | Rel(rel) -> sb.AppendFormat(" rel=\"{0}\"", rel) |> ignore
-        | Href(href) -> sb.AppendFormat(" href=\"{0}\"", href) |> ignore
+        | Id(id) ->             write "id"          id
+        | Class(cls) ->         write "class"       (String.concat " " cls)
+        | Type(typ) ->          write "type"        typ
+        | Src(src) ->           write "src"         src
+        | Action(act) ->        write "action"      act
+        | Method(met) ->        write "method"      met
+        | Rel(rel) ->           write "rel"         rel
+        | Href(href) ->         write "href"        href
+        | Integrity(int) ->     write "integrity"   int
+        | CrossOrigin(co) ->    write "crossorigin" co
     sb
 
 let rec renderNode (sb : StringBuilder) = 
@@ -58,12 +65,15 @@ let rec renderNode (sb : StringBuilder) =
         renderAttrs sb attrs |> ignore
         sb.Append(" />")
     | Text(s) -> sb.Append(s)
+    | Empty -> sb
 
 let render node = (renderNode (StringBuilder()) node).ToString()
 let renderFn (nodeFn : unit -> Node) = render <| nodeFn()
 let elem name attrs children = Element(name, attrs, children)
 let elem' name attrs = ClosedElement(name, attrs)
 let text s = Text(s)
+let empty = Empty
+
 let document children = Document(children)
 let body children = elem "body" [] children
 let head children = elem "head" [] children
@@ -91,8 +101,10 @@ let script attrs code = elem "script" attrs [text code]
 let link attrs = elem' "link" attrs
 let br attrs = elem' "br" attrs
 let a attrs children = elem "a" attrs children
+let span attrs children = elem "span" attrs children
+let button attrs children = elem "button" attrs children
 
-(* html5 wank *)
+(* html5 things *)
 let header attrs children = elem "header" attrs children
 let nav attrs children = elem "nav" attrs children
 let section attrs children = elem "section" attrs children

@@ -29,18 +29,20 @@
     <GenerateTailCalls>true</GenerateTailCalls>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\4.0\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="IO.fs" />
     <Compile Include="Users.fs" />
+    <Compile Include="Streams.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Actions.fs" />
     <Compile Include="Program.fs" />
     <None Include="packages.config" />
-    <None Include="definitions\user.json" />
-    <EmbeddedResource Include="style\stream.css">
+    <Content Include="style\stream.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Content>
     <Content Include="player\jw-icons.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -98,6 +100,14 @@
     <Content Include="player\skins\vapor.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="stream.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="user.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Scripts\load-references-debug.fsx" />
+    <None Include="Scripts\load-project-debug.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -114,9 +124,12 @@
       <HintPath>..\packages\FSharp.Data.2.3.0\lib\net40\FSharp.Data.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <ProjectReference Include="..\..\..\Development\IanacStream\HtmlGen\HtmlGen.fsproj">
-      <Project>{C99C8B20-9C6D-48DC-9330-6B124BCC4CF3}</Project>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HtmlGen\HtmlGen.fsproj">
       <Name>HtmlGen</Name>
+      <Project>{c99c8b20-9c6d-48dc-9330-6b124bcc4cf3}</Project>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
 </Project>

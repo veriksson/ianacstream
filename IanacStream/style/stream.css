@@ -22,6 +22,7 @@ nav {
         display: flex;
         justify-content: center;
         height: 3em;
+        padding: 0;
     }
 
     nav li {
