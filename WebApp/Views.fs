@@ -46,8 +46,8 @@ let streamScript user =
     var playerInstance = jwplayer("stream");
         playerInstance.setup({
         "file": "rtmp://www.iamnotacrook.net:1935/live/%s",
-        "width": 1280,
-        "height": 720,
+        "width": 764,
+        "height": 430,
         "autostart": true
     });""" user)
    
@@ -58,6 +58,15 @@ let formTextInput id placeholder =
                     input [Type "text"; Class ["form-control"]; Id id; Name id; Placeholder (placeholder + "...")] []
                 ]
             ]
+
+let formTextInput' id placeholder value = 
+    div [Class ["form-group"]] [
+                label [For id; Class ["col-sm-2"; "control-label"]] [text placeholder]
+                div [Class ["col-sm-10"]] [
+                    input [Type "text"; Class ["form-control"]; Id id; Name id; Placeholder (placeholder + "..."); Value value] []
+                ]
+            ]
+
 let formPasswordInput id placeholder = 
     div [Class ["form-group"]] [
                 label [For id; Class ["col-sm-2"; "control-label"]] [text placeholder]
@@ -82,20 +91,21 @@ let formSubmitButton buttonText =
 
 let streamAdminForm (stream:Types.Stream) = 
     div [Class ["row"]][
+        hr []
         div [Class ["form-horizontal"]] [
-            text "Update stream info"
+            h3 [] [text "Update stream info"]
             form [Action "/updateStream"; Method "POST"] [
-                formTextInput "yourName" stream.Username
-                formTextInput "streamName" stream.Name
+                formTextInput' "yourName" "Your name" stream.Username
+                formTextInput' "streamName" "Stream name" stream.Name
                 formHiddenInput "streamKey" stream.StreamKey
                 formSubmitButton "Submit"]
         ]
 
         div [Class ["form-horizontal"]] [
-            text "Stop streaming"
+            h3 [] [text "Stop streaming"]
             form [Action "/stopStream"; Method "POST"] [
                 formHiddenInput "streamKey" stream.StreamKey
-                formSubmitButton "Submit"]
+                formSubmitButton "Stop"]
             ]
         ]
    
@@ -103,7 +113,8 @@ let streamAdmin (stream:Types.Stream) =
     let streamName =
         h2 [] [ 
             text stream.Name
-            span [Class ["small"]] [text stream.Name]
+            span [Class ["small"]] [text (" &ndash; " + stream.Username)]
+            hr []
             ]
     let streamLink = sprintf "http://stream.iamnotacrook.net/stream/%s" stream.StreamKey
     baseTemplate 
@@ -119,7 +130,7 @@ let stream (stream:Types.Stream) =
     let streamName =
         h2 [] [ 
             text stream.Name
-            span [Class ["small"]] [text stream.Name]
+            span [Class ["small"]] [text (" &ndash; " + stream.Username)]
             ]
     baseTemplate 
         [script [Src "/player/jwplayer.js"] ""; script [] "jwplayer.key=\"U2wFWwmt9Zd3C/ATxa6y0FcFAkGCiSoCAzhYog==\""] 

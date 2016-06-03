@@ -64,25 +64,63 @@
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
-    <None Include="player\jw-icons.ttf" />
-    <None Include="player\jw-icons.woff" />
-    <None Include="player\jwplayer.flash.swf" />
-    <Content Include="player\jwplayer.js" />
-    <Content Include="player\polyfills.base64.js" />
-    <Content Include="player\polyfills.promise.js" />
-    <Content Include="player\provider.cast.js" />
-    <Content Include="player\provider.caterpillar.js" />
-    <Content Include="player\provider.shaka.js" />
-    <Content Include="player\provider.youtube.js" />
-    <Content Include="player\skins\beelden.css" />
-    <Content Include="player\skins\bekle.css" />
-    <Content Include="player\skins\five.css" />
-    <Content Include="player\skins\glow.css" />
-    <Content Include="player\skins\roundster.css" />
-    <Content Include="player\skins\seven.css" />
-    <Content Include="player\skins\six.css" />
-    <Content Include="player\skins\stormtrooper.css" />
-    <Content Include="player\skins\vapor.css" />
+    <Content Include="player\jw-icons.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\jw-icons.woff">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\jwplayer.flash.swf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\jwplayer.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\polyfills.base64.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\polyfills.promise.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\provider.cast.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\provider.caterpillar.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\provider.shaka.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\provider.youtube.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\beelden.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\bekle.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\five.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\glow.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\roundster.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\seven.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\six.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\stormtrooper.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="player\skins\vapor.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="stream.json" />
     <None Include="user.json" />
   </ItemGroup>
