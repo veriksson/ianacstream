@@ -15,6 +15,10 @@ type Attr =
     | Href of string
     | Integrity of string
     | CrossOrigin of string
+    | Placeholder of string
+    | For of string
+    | Value of string
+    | Name of string
 
 type Node = 
     | Document of Node seq
@@ -32,16 +36,20 @@ let renderAttrs (sb : StringBuilder) attrs =
             sb.Append(" style=\"") |> ignore
             kvps |> Seq.iter (fun (k, v) -> sb.AppendFormat("{0}:{1};", k, v) |> ignore)
             sb.Append("\"") |> ignore
-        | Id(id) ->             write "id"          id
-        | Class(cls) ->         write "class"       (String.concat " " cls)
-        | Type(typ) ->          write "type"        typ
-        | Src(src) ->           write "src"         src
-        | Action(act) ->        write "action"      act
-        | Method(met) ->        write "method"      met
-        | Rel(rel) ->           write "rel"         rel
-        | Href(href) ->         write "href"        href
-        | Integrity(int) ->     write "integrity"   int
-        | CrossOrigin(co) ->    write "crossorigin" co
+        | Id(id)            ->  write "id"          id
+        | Class(cls)        ->  write "class"       (String.concat " " cls)
+        | Type(typ)         ->  write "type"        typ
+        | Src(src)          ->  write "src"         src
+        | Action(act)       ->  write "action"      act
+        | Method(met)       ->  write "method"      met
+        | Rel(rel)          ->  write "rel"         rel
+        | Href(href)        ->  write "href"        href
+        | Integrity(int)    ->  write "integrity"   int
+        | CrossOrigin(co)   ->  write "crossorigin" co
+        | Placeholder(ph)   ->  write "placeholder" ph
+        | For(fr)           ->  write "for"         fr
+        | Value(v)          ->  write "value"       v
+        | Name(n)           ->  write "name"        n
     sb
 
 let rec renderNode (sb : StringBuilder) = 
@@ -96,6 +104,7 @@ let ol attrs children = elem "ol" attrs children
 let form attrs children = elem "form" attrs children
 let input attrs children = elem "input" attrs children
 let password (attrs : Attr seq) children = input (Seq.append [ Type "password" ] attrs) children
+let hidden attrs children = input (Seq.append [Type "hidden"] attrs) children
 let img attrs = elem' "img" attrs
 let script attrs code = elem "script" attrs [text code]
 let link attrs = elem' "link" attrs
@@ -103,6 +112,7 @@ let br attrs = elem' "br" attrs
 let a attrs children = elem "a" attrs children
 let span attrs children = elem "span" attrs children
 let button attrs children = elem "button" attrs children
+let label attrs children = elem "label" attrs children
 
 (* html5 things *)
 let header attrs children = elem "header" attrs children

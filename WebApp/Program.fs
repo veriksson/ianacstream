@@ -22,19 +22,24 @@ let jsonUserService : UserService =
         approveUser = (fun u -> false) // not implemented yet
     }
 
-let jsonStreamService : StreamService =
+let streams : StreamService =
     { 
-        findStream = Streams.JsonStreams.findStream
-        findStream' = Streams.JsonStreams.findStream'
-        startStream = Streams.JsonStreams.startStream
-        stopStream = Streams.JsonStreams.stopStream   
+        findStream = Streams.InMemoryStreams.findStream
+        findStream' = Streams.InMemoryStreams.findStream'
+        startStream = Streams.InMemoryStreams.startStream
+        stopStream = Streams.InMemoryStreams.stopStream   
+        updateStream = Streams.InMemoryStreams.updateStream
     }
 
 let app = 
-    choose [ GET >=> choose [ path "/" >=> (render Views.index |> Successful.OK)
-                              pathScan "/stream/%s" (Actions.showStream jsonStreamService)
+    choose [ GET >=> choose [ path "/" >=> Actions.index
+                              pathScan "/stream/%s" (Actions.showStream streams)
                               path "/signUp" >=> Actions.showSignUp
-                              Files.browseHome ] ]
+                              Files.browseHome ] 
+             POST >=> choose [ path "/signUp" >=> request (fun r -> (Actions.signUp streams) r) 
+                               path "/updateStream" >=> request (fun r -> (Actions.updateStream streams) r)
+                               path "/stopStream" >=> request (fun r -> (Actions.stopStream streams) r)
+             ]]
 
 let mimeTypes = 
     defaultMimeTypesMap @@ (function 

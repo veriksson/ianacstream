@@ -6,11 +6,39 @@ open Types
 
 type StreamService = 
     {
-        findStream: User -> Stream option
-        findStream': string -> Stream option
-        startStream: string -> string -> string -> bool
-        stopStream: Stream -> bool
+        findStream:     User    -> Stream option
+        findStream':    string  -> Stream option
+        startStream:    string  -> string -> string -> bool
+        stopStream:     Stream  -> bool
+        updateStream:   Stream  -> bool
     }
+
+module InMemoryStreams =
+    open System
+    let mutable streams: Stream list = []
+
+    let findStream' streamKey = 
+        List.tryFind (fun s -> s.StreamKey = streamKey) streams
+    let findStream (user:User) =
+        findStream' user.StreamKey 
+    let startStream streamKey streamName userName = 
+        let stream = { Username = userName
+                       StreamKey = streamKey 
+                       Started = DateTime.UtcNow 
+                       Name = streamName }
+        streams <- stream :: streams
+        true
+    let stopStream stream =
+        streams <- List.filter (fun s -> s.StreamKey <> stream.StreamKey) streams
+        true
+    let updateStream stream =
+        let old = findStream' stream.StreamKey
+        match old with
+        | Some(s) -> 
+            stopStream s |> ignore
+            streams <- stream :: streams
+            true
+        | None -> false
 
 module JsonStreams = 
     open System.Configuration

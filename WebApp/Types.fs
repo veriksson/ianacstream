@@ -2,8 +2,6 @@
 
 open System
 
-//type StreamKey = string
-
 type User = 
   { Name        : string
     Joined      : DateTime
