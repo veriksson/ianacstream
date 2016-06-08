@@ -1,6 +1,4 @@
-﻿// Learn more about F# at http://fsharp.org
-// See the 'F# Tutorial' project for more help.
-open Suave
+﻿open Suave
 open Suave.Filters
 open Suave.Files
 open Suave.Operators
@@ -14,21 +12,13 @@ type StandardOutLogging() =
     interface Logger with
         member x.Log level fLine = printfn "%d: %s" (level.ToInt()) (fLine()).message
 
-// implementations of the services
-let jsonUserService : UserService = 
-    {
-        findUser = Users.JsonUsers.findUser
-        saveUser = Users.JsonUsers.saveUser
-        approveUser = (fun u -> false) // not implemented yet
-    }
-
 let streams : StreamService =
     { 
-        findStream = Streams.InMemoryStreams.findStream
-        findStream' = Streams.InMemoryStreams.findStream'
-        startStream = Streams.InMemoryStreams.startStream
-        stopStream = Streams.InMemoryStreams.stopStream   
-        updateStream = Streams.InMemoryStreams.updateStream
+        FindStream = Streams.InMemoryStreams.findStream
+        FindStream' = Streams.InMemoryStreams.findStream'
+        StartStream = Streams.InMemoryStreams.startStream
+        StopStream = Streams.InMemoryStreams.stopStream   
+        UpdateStream = Streams.InMemoryStreams.updateStream
     }
 
 let app = 
