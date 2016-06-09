@@ -2,5 +2,7 @@
   "name": "example",
   "joined":  "2012-04-23T18:25:43.511Z",
   "streamKey": "exampleStreamKey",
-  "approved":  false
+  "approved": false,
+  "password": "propasd",
+  "admin":  false
 }

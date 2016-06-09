@@ -12,6 +12,7 @@ type StandardOutLogging() =
     interface Logger with
         member x.Log level fLine = printfn "%d: %s" (level.ToInt()) (fLine()).message
 
+
 let streams : StreamService =
     { 
         FindStream = Streams.InMemoryStreams.findStream

@@ -23,7 +23,8 @@ module InMemoryStreams =
         let stream = { Username = userName
                        StreamKey = streamKey 
                        Started = DateTime.UtcNow 
-                       Name = streamName }
+                       Name = streamName
+                       Live = false}
         streams <- stream :: streams
         true
     let stopStream stream =

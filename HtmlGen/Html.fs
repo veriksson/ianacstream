@@ -82,37 +82,48 @@ let elem' name attrs = ClosedElement(name, attrs)
 let text s = Text(s)
 let empty = Empty
 
+(* Document *)
 let document children = Document(children)
 let body children = elem "body" [] children
 let head children = elem "head" [] children
 let title txt = elem "title" [] [ text txt ]
+(* Text *)
 let h1 attrs children = elem "h1" attrs children
 let h2 attrs children = elem "h2" attrs children
 let h3 attrs children = elem "h3" attrs children
 let h4 attrs children = elem "h4" attrs children
 let h5 attrs children = elem "h5" attrs children
+
+let p attrs children = elem "p" attrs children
+
+(* Table *)
 let table attrs children = elem "table" attrs children
 let th attrs children = elem "th" attrs children
 let tr attrs children = elem "tr" attrs children
 let td attrs children = elem "td" attrs children
+
+(* Layout *)
 let div attrs children = elem "div" attrs children
-let p attrs children = elem "p" attrs children
-let hr attrs = elem' "hr" attrs
 let li attrs children = elem "li" attrs children
 let ul attrs children = elem "ul" attrs children
 let ol attrs children = elem "ol" attrs children
+let hr attrs = elem' "hr" attrs
+let br attrs = elem' "br" attrs
+let span attrs children = elem "span" attrs children
+
+(* Forms *)
 let form attrs children = elem "form" attrs children
 let input attrs children = elem "input" attrs children
 let password (attrs : Attr seq) children = input (Seq.append [ Type "password" ] attrs) children
 let hidden attrs children = input (Seq.append [Type "hidden"] attrs) children
+let button attrs children = elem "button" attrs children
+let label attrs children = elem "label" attrs children
+
+(* Content *)
 let img attrs = elem' "img" attrs
 let script attrs code = elem "script" attrs [text code]
 let link attrs = elem' "link" attrs
-let br attrs = elem' "br" attrs
 let a attrs children = elem "a" attrs children
-let span attrs children = elem "span" attrs children
-let button attrs children = elem "button" attrs children
-let label attrs children = elem "label" attrs children
 
 (* html5 things *)
 let header attrs children = elem "header" attrs children
