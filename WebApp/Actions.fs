@@ -11,7 +11,7 @@ let index =
     render Views.index |> Successful.OK
 
 let showStream streams (streamKey:string) =
-    match streams.findStream' streamKey with
+    match streams.FindStream' streamKey with
     | Some(s) ->
         render <| Views.stream s |> Successful.OK
     | None -> RequestErrors.NOT_FOUND "Stream not found"
@@ -37,9 +37,9 @@ let signUp (streams:StreamService) (request:HttpRequest) =
         let yourName = getform "yourName"
         let streamName = getform "streamName"
         let key = genKey ()
-        match streams.startStream key streamName yourName with
+        match streams.StartStream key streamName yourName with
         | true -> 
-            let stream = streams.findStream' key |> Option.get
+            let stream = streams.FindStream' key |> Option.get
             render <| Views.streamAdmin stream |> Successful.OK
         | false -> ServerErrors.INTERNAL_ERROR "Could not start stream"
 
@@ -49,7 +49,7 @@ let updateStream (streams:StreamService) (request:HttpRequest) =
     if streamKey = "" then 
         RequestErrors.BAD_REQUEST "Missing stream key!"
     else
-        let currentStream = streams.findStream' streamKey
+        let currentStream = streams.FindStream' streamKey
         match currentStream with
         | Some(cs) -> 
             let username = getform "yourName"
@@ -59,8 +59,9 @@ let updateStream (streams:StreamService) (request:HttpRequest) =
                         Username = username
                         Started = cs.Started
                         StreamKey = cs.StreamKey
+                        Live = cs.Live
                       }
-            if streams.updateStream ns then
+            if streams.UpdateStream ns then
                 render <| Views.streamAdmin ns |> Successful.OK
             else
                 ServerErrors.INTERNAL_ERROR "Could not update stream"
@@ -69,8 +70,8 @@ let updateStream (streams:StreamService) (request:HttpRequest) =
 let stopStream (streams:StreamService) (request:HttpRequest) = 
     let getform = getDataOrEmpty request.formData 
     let streamKey = getform "streamKey"
-    let stream = streams.findStream' streamKey
+    let stream = streams.FindStream' streamKey
     match stream with
-    | Some(s) -> streams.stopStream s |> ignore; Redirection.FOUND "/"
+    | Some(s) -> streams.StopStream s |> ignore; Redirection.FOUND "/"
     | None -> Redirection.FOUND "/"
                 

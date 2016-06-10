@@ -47,10 +47,22 @@ module JsonUsers =
             StreamKey   = juser.StreamKey
             Password    = juser.Password
             Admin       = juser.Admin }
-
+    let private toJUser (user:User) =
+        JUser.Root(name = user.Name, joined = user.Joined, approved = user.Approved, streamKey = user.StreamKey, password = user.Password, admin = user.Admin)
+    let private file name =
+        Path.Combine(userFolder.FullName, (sprintf "%s.json" name))
     let findUser username = 
-        let userfile = Path.Combine(userFolder.FullName, (sprintf "%s.json" username))
+        let userfile = file username
         match File.Exists(userfile) with
         | true -> JUser.Load userfile |> toUser |> Some
         | false -> None
+    let saveUser user =
+        let json = toJUser user
+        let userfile = file user.Name
+        try
+            File.WriteAllText(userfile, json.JsonValue.ToString())
+            true
+        with
+            | :? IOException -> false
 
+        
