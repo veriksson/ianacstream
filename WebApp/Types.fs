@@ -16,3 +16,8 @@ type Stream =
     Name        : string
     Username    : string
     Live        : bool}
+
+type Context = 
+    {
+        User    : User option
+    }

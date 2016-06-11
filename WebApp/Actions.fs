@@ -16,6 +16,9 @@ let showStream streams (streamKey:string) =
         render <| Views.stream s |> Successful.OK
     | None -> RequestErrors.NOT_FOUND "Stream not found"
 
+let showLogin = 
+    render Views.login |> Successful.OK
+
 let showSignUp = 
     render Views.signUp |> Successful.OK
 

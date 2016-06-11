@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="Context.fs" />
     <Compile Include="IO.fs" />
     <Compile Include="Users.fs" />
     <Compile Include="Streams.fs" />

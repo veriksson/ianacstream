@@ -2,7 +2,13 @@
 
 open HtmlGen
 
-let baseTemplate headContent content footerContent = 
+let buttons user = 
+    let staticButtons = ["/", "Front"; "/browse", "Active streams"]
+    match user with
+    | Some(u) -> staticButtons @ ["/settings", "Settings"]
+    | None -> staticButtons @ ["/login", "Log in"]
+
+let baseTemplate (ctx:Types.Context) headContent content footerContent = 
     document [
         head (
             [ 
@@ -24,22 +30,14 @@ let baseTemplate headContent content footerContent =
                     div [Class ["row"; "text-center"]] [
                         h1 [] [text "IANAC"; br []; text "Streaming for the few"]]
                     div [Class ["row"; "text-center"]] [
-                        div [Class ["btn-group"]] (["/", "Front"; "/signUp", "Sign Up"]
+                        div [Class ["btn-group"]] ((buttons ctx.User)
                                     |> List.map (fun (link, linkText) -> a [Href link; Class ["btn btn-primary"]] [text linkText]))]
                     section [Id "content"; Style ["margin", "10px"]] content
-                    div [Class ["row";"text-center"]] ([ text "2016 IANAC" ] @ footerContent)]
+                    div [Class ["row";"text-center"]] 
+                        ([  hr []
+                            text "2016 IANAC" ] @ footerContent)]
               ])]
 
-let index = 
-    baseTemplate [] 
-        [div [Class ["col-12"; "text-center"]] 
-            [   
-                p [] [text "IANAC is a private streaming service"]
-                p [] [text "Get an account by going to the sign in page"]
-                p [] [text "You need to be approved to start streaming"]
-            ]
-        ] 
-        []
 
 let streamScript user = 
     script [] (sprintf """
@@ -89,6 +87,41 @@ let formSubmitButton buttonText =
             ]
         ] 
 
+let signUpForm = 
+    div [Id "sign-up-form"; Class ["form-horizontal"]] 
+        [
+        form [Action "/signUp"; Method "POST"] [
+            formTextInput "yourName" "Username"
+            formTextInput "yourEmail" "Email"
+            formPasswordInput "password" "Password"
+            formSubmitButton "Sign up"
+            ]
+        ]
+
+let loginForm = 
+    div [Id "login-form"; Class ["form-horizontal"]] 
+        [
+        form [Action "/login"; Method "POST"] [
+            formTextInput "yourName" "Username"
+            formPasswordInput "password" "Password"
+            formSubmitButton "Log in"
+            ]
+        ]
+let index = 
+    baseTemplate Context.defaultCtx
+        [] 
+        [div [Class ["col-12"; "text-center"]] 
+            [   
+                p [] [text "IANAC is a private streaming service"]
+                p [] [text "Get an account by going to the sign in page"]
+                p [] [text "You need to be approved to start streaming"]
+               
+            ]
+        ] 
+        []
+
+
+
 let streamAdminForm (stream:Types.Stream) = 
     div [Class ["row"]][
         hr []
@@ -117,7 +150,7 @@ let streamAdmin (stream:Types.Stream) =
             hr []
             ]
     let streamLink = sprintf "http://stream.iamnotacrook.net/stream/%s" stream.StreamKey
-    baseTemplate 
+    baseTemplate Context.defaultCtx
         [script [Src "/player/jwplayer.js"] ""; script [] "jwplayer.key=\"U2wFWwmt9Zd3C/ATxa6y0FcFAkGCiSoCAzhYog==\""] 
         [   div [Id "stream-info"; Class ["row"; "text-center"]] [
                 streamName
@@ -132,22 +165,40 @@ let stream (stream:Types.Stream) =
             text stream.Name
             span [Class ["small"]] [text (" &ndash; " + stream.Username)]
             ]
-    baseTemplate 
+    baseTemplate Context.defaultCtx
         [script [Src "/player/jwplayer.js"] ""; script [] "jwplayer.key=\"U2wFWwmt9Zd3C/ATxa6y0FcFAkGCiSoCAzhYog==\""] 
         [   div [Id "stream-info"; Class ["row"; "text-center"]] [streamName]
             div [Id "stream"; Style ["text-align", "center"]] []] [(streamScript stream.StreamKey)]
 
+let login = 
+    baseTemplate Context.defaultCtx
+        []
+        [
+            div [Class ["col-12"]]  
+                [
+                    h3 [Class ["text-center"]] [text "Login"]
+                    loginForm
+                    hr []
+                    h3 [Class ["text-center"]] [text "Don't have an account? Request one here."]
+                    signUpForm
+                ]
+        ]
+        []
 
 let signUp =
-    baseTemplate [] [
-        div [Id "sign-up-form"; Class ["form-horizontal"]] [
+    baseTemplate Context.defaultCtx
+        [] 
+        [
+        div [Id "sign-up-form"; Class ["form-horizontal"]] 
+            [
             form [Action "/signUp"; Method "POST"] [
                 formTextInput "yourName" "Your name"
                 formTextInput "streamName" "Stream name"
                 formPasswordInput "password" "Password"
                 formSubmitButton "Submit"
                 ]
-            ]]
+            ]
+        ]
         []
 
     

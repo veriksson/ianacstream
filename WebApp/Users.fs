@@ -27,7 +27,7 @@ type UserService =
     {
         FindUser: string -> User option
         SaveUser: User -> bool
-        ApproveUser: User -> bool
+        ListUsers : unit -> User seq
     }
 
 module JsonUsers =
@@ -64,5 +64,8 @@ module JsonUsers =
             true
         with
             | :? IOException -> false
+    let listUsers () =
+        userFolder.EnumerateFiles()
+        |> Seq.map (fun f -> JUser.Load f.FullName |> toUser)
 
         

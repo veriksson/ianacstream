@@ -12,6 +12,13 @@ type StandardOutLogging() =
     interface Logger with
         member x.Log level fLine = printfn "%d: %s" (level.ToInt()) (fLine()).message
 
+let users : UserService = 
+    {
+        FindUser = Users.JsonUsers.findUser
+        SaveUser = Users.JsonUsers.saveUser
+        ListUsers = Users.JsonUsers.listUsers
+    }
+
 
 let streams : StreamService =
     { 
@@ -25,9 +32,10 @@ let streams : StreamService =
 let app = 
     choose [ GET >=> choose [ path "/" >=> Actions.index
                               pathScan "/stream/%s" (Actions.showStream streams)
-                              path "/signUp" >=> Actions.showSignUp
+                              path "/login" >=> Actions.showLogin
                               Files.browseHome ] 
-             POST >=> choose [ path "/signUp" >=> request (fun r -> (Actions.signUp streams) r) 
+             POST >=> choose [ path "/signUp" >=> request (fun r -> (Actions.signUp streams) r)
+                               path "/login"
                                path "/updateStream" >=> request (fun r -> (Actions.updateStream streams) r)
                                path "/stopStream" >=> request (fun r -> (Actions.stopStream streams) r)
              ]]
