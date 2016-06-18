@@ -1,4 +1,4 @@
-﻿module Streams
+﻿module IanacStream.Streams
 
 open Types
 

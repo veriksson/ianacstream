@@ -1,16 +1,31 @@
-﻿module Actions
+﻿module IanacStream.Actions
 open System
 open System.Configuration
 
 open Suave
+open Suave.Html
 open Types
 open Streams
 open Users
 
-let index = 
-    render Views.index |> Successful.OK
+let empty () = emptyText 
 
-let showStream streams (streamKey:string) =
+let html headFn container footerFn = 
+    Successful.OK (Views.index headFn container footerFn)
+
+let standardHtml container = 
+    html empty container empty
+
+let home =
+    standardHtml Views.home 
+
+let browseStreams = 
+    standardHtml Views.browseStreams
+
+let viewStream name = 
+    standardHtml (Views.viewStream name)
+
+(*let showStream streams (streamKey:string) =
     match streams.FindStream' streamKey with
     | Some(s) ->
         render <| Views.stream s |> Successful.OK
@@ -77,4 +92,4 @@ let stopStream (streams:StreamService) (request:HttpRequest) =
     match stream with
     | Some(s) -> streams.StopStream s |> ignore; Redirection.FOUND "/"
     | None -> Redirection.FOUND "/"
-                
+                *)

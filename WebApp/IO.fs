@@ -1,4 +1,4 @@
-﻿module IO
+﻿module IanacStream.IO
 
 open System.IO
 

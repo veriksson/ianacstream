@@ -1,4 +1,4 @@
-﻿module Users
+﻿module IanacStream.Users
 
 open System
 open Types

@@ -1,54 +1,98 @@
-﻿module Views
+﻿module IanacStream.Views
 
-open HtmlGen
+open Suave.Html
 
-let buttons user = 
-    let staticButtons = ["/", "Front"; "/browse", "Active streams"]
-    match user with
-    | Some(u) -> staticButtons @ ["/settings", "Settings"]
-    | None -> staticButtons @ ["/login", "Log in"]
+let divId id = divAttr ["id", id]
 
-let baseTemplate (ctx:Types.Context) headContent content footerContent = 
-    document [
-        head (
-            [ 
-            title "IANAC  &ndash; Streaming"
-            link [Type "text/css" 
-                  Rel "stylesheet"
-                  Href "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-                  Integrity "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
-                  CrossOrigin "anonymous"]
-            link [Type "text/css" 
-                  Rel "stylesheet"
-                  Href "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-                  Integrity "sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
-                  CrossOrigin "anonymous"]
-            ] @ headContent)
-        body ([
-                div [Class ["container"]; 
-                     Style ["width", "800px"]] [
-                    div [Class ["row"; "text-center"]] [
-                        h1 [] [text "IANAC"; br []; text "Streaming for the few"]]
-                    div [Class ["row"; "text-center"]] [
-                        div [Class ["btn-group"]] ((buttons ctx.User)
-                                    |> List.map (fun (link, linkText) -> a [Href link; Class ["btn btn-primary"]] [text linkText]))]
-                    section [Id "content"; Style ["margin", "10px"]] content
-                    div [Class ["row";"text-center"]] 
-                        ([  hr []
-                            text "2016 IANAC" ] @ footerContent)]
-              ])]
+let h1 xml = tag "h1" [] xml
+let h2 s = tag "h2" [] (text s)
 
+let ul xml = tag "ul" [] (flatten xml)
+let li = tag "li" []
+
+let aHref href = tag "a" ["href", href]
+let buttonHref href = tag "a" ["href", href; " class", "btn btn-primary"]
+
+let cssLink href = linkAttr ["href", href; " rel", "stylesheet"; " type", "text/css"]
+
+let hrAttr attr =  tag "hr" attr empty
+let hr = hrAttr []
+
+let p s = tag "p" [] (text s)
+
+let index headFn container (footerFn: unit -> Xml) = 
+    html [
+        head [ 
+            title  "IANAC  &ndash; Streaming"
+            cssLink "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+            cssLink "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+            headFn ()
+        ]
+
+        body [
+            divAttr ["class", "container"; "style", "width:800px"] [
+                divAttr ["class", "row text-center"] [
+                    h1  (flatten [
+                            text "IANAC"
+                            br
+                            text "Streaming for the few"])
+                    
+                ]
+                divAttr  ["class", "row text-center"] [
+                    divAttr ["class","btn-group"] (["/", "Front"; "/browse", "Active streams"]
+                                |> List.map (fun (link, linkText) -> buttonHref link (text linkText)))
+                ]
+
+                divAttr ["id", "content"; "style", "margin: 10px"] container
+
+                divAttr ["class", "row text-center"] [
+                    hr                        
+                    text "2016 IANAC" 
+                ]
+
+                divId "footer" [footerFn ()]
+            ]        
+        ]
+    ]
+    |> xmlToString
+
+let home = [
+    divAttr ["class", "col-12 text-center"] [
+        p "IANAC is a private streaming service"
+        p "Get an account by going to the sign in page"
+        p "You need to be approved to start streaming"
+    ]
+]
+
+let browseStreams = [
+    text "Browse streams"
+]
+
+let viewStream name = [
+    text (sprintf "Viewing stream from %s" name)
+]
 
 let streamScript user = 
-    script [] (sprintf """
-    var playerInstance = jwplayer("stream");
-        playerInstance.setup({
-        "file": "rtmp://www.iamnotacrook.net:1935/live/%s",
-        "width": 764,
-        "height": 430,
-        "autostart": true
-    });""" user)
+    scriptAttr [ "type", "text/javascript" ] [
+        (text (sprintf """
+                var playerInstance = jwplayer("stream");
+                    playerInstance.setup({
+                    "file": "rtmp://www.iamnotacrook.net:1935/live/%s",
+                    "width": 764,
+                    "height": 430,
+                    "autostart": true
+                });""" user) )
+                ]
+
+//let formTextInput id placeholder = 
+//    divAttr ["class", "form-group"] [
+//                label [For id; Class ["col-sm-2"; "control-label"]] [text placeholder]
+//                div [Class ["col-sm-10"]] [
+//                    input [Type "text"; Class ["form-control"]; Id id; Name id; Placeholder (placeholder + "...")] []
+//                ]
+//            ]
    
+(*
 let formTextInput id placeholder = 
     div [Class ["form-group"]] [
                 label [For id; Class ["col-sm-2"; "control-label"]] [text placeholder]
@@ -201,4 +245,4 @@ let signUp =
         ]
         []
 
-    
+    *)

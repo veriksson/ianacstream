@@ -1,10 +1,11 @@
-﻿open Suave
+﻿module IanacStream.App
+
+open Suave
 open Suave.Filters
 open Suave.Files
 open Suave.Operators
 open Suave.Logging
 open Suave.Writers
-open HtmlGen
 open Streams
 open Users
 
@@ -30,15 +31,17 @@ let streams : StreamService =
     }
 
 let app = 
-    choose [ GET >=> choose [ path "/" >=> Actions.index
-                              pathScan "/stream/%s" (Actions.showStream streams)
-                              path "/login" >=> Actions.showLogin
+    choose [ GET >=> choose [ path Paths.home >=> Actions.home
+                              path Paths.Stream.browse >=> Actions.browseStreams
+                              pathScan Paths.Stream.userStream Actions.viewStream
+                             // pathScan "/stream/%s" (Actions.showStream streams)
+                             // path "/login" >=> Actions.showLogin
                               Files.browseHome ] 
-             POST >=> choose [ path "/signUp" >=> request (fun r -> (Actions.signUp streams) r)
+            (* POST >=> choose [ path "/signUp" >=> request (fun r -> (Actions.signUp streams) r)
                                path "/login"
                                path "/updateStream" >=> request (fun r -> (Actions.updateStream streams) r)
                                path "/stopStream" >=> request (fun r -> (Actions.stopStream streams) r)
-             ]]
+             ]*)]
 
 let mimeTypes = 
     defaultMimeTypesMap @@ (function 

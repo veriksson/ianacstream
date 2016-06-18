@@ -1,4 +1,4 @@
-﻿module Types
+﻿module IanacStream.Types
 
 open System
 
