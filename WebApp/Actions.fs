@@ -10,11 +10,11 @@ open Users
 
 let empty () = emptyText 
 
-let html headFn container footerFn = 
-    Successful.OK (Views.index headFn container footerFn)
+let html user headFn container footerFn = 
+    Successful.OK (Views.index user headFn container footerFn)
 
 let standardHtml container = 
-    html empty container empty
+    html None empty container empty
 
 let home =
     standardHtml Views.home 
@@ -25,6 +25,8 @@ let browseStreams =
 let viewStream name = 
     standardHtml (Views.viewStream name)
 
+let login =
+    standardHtml Views.logon
 (*let showStream streams (streamKey:string) =
     match streams.FindStream' streamKey with
     | Some(s) ->

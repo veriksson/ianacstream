@@ -34,6 +34,7 @@ let app =
     choose [ GET >=> choose [ path Paths.home >=> Actions.home
                               path Paths.Stream.browse >=> Actions.browseStreams
                               pathScan Paths.Stream.userStream Actions.viewStream
+                              path Paths.User.login >=> Actions.login
                              // pathScan "/stream/%s" (Actions.showStream streams)
                              // path "/login" >=> Actions.showLogin
                               Files.browseHome ] 

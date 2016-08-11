@@ -1,6 +1,9 @@
 ﻿module IanacStream.Views
 
 open Suave.Html
+open Types
+open Suave.Form
+open Forms
 
 let divId id = divAttr ["id", id]
 
@@ -20,14 +23,22 @@ let hr = hrAttr []
 
 let p s = tag "p" [] (text s)
 
-let index headFn container (footerFn: unit -> Xml) = 
+let partHead headFn =
+     head [ 
+                title  "IANAC  &ndash; Streaming"
+                cssLink "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+                cssLink "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+                headFn ()
+            ]
+
+let getUserButton (user:User option) =
+    match user with
+    | Some(u) -> Paths.User.settings, "Settings"
+    | None -> Paths.User.login, "Log in"
+
+let index user headFn container footerFn = 
     html [
-        head [ 
-            title  "IANAC  &ndash; Streaming"
-            cssLink "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-            cssLink "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-            headFn ()
-        ]
+        partHead headFn
 
         body [
             divAttr ["class", "container"; "style", "width:800px"] [
@@ -36,10 +47,9 @@ let index headFn container (footerFn: unit -> Xml) =
                             text "IANAC"
                             br
                             text "Streaming for the few"])
-                    
                 ]
                 divAttr  ["class", "row text-center"] [
-                    divAttr ["class","btn-group"] (["/", "Front"; "/browse", "Active streams"]
+                    divAttr ["class","btn-group"] ([Paths.home, "Front"; Paths.Stream.browse, "Active streams"; (getUserButton user)]
                                 |> List.map (fun (link, linkText) -> buttonHref link (text linkText)))
                 ]
 
@@ -84,6 +94,22 @@ let streamScript user =
                 });""" user) )
                 ]
 
+let logon = [
+    h2 "Log on"
+    p "Please enter your user name and password"
+
+    renderForm 
+        { Form = Forms.logon
+          Fieldsets = 
+            [{ Legend = "Account Information"
+               Fields = 
+                    [ { Label = "User name"
+                        Xml = input (fun f -> <@ f.Username @>) ["class", "form-control"] }
+                      { Label = "Password"
+                        Xml = input (fun f -> <@ f.Password @>) ["class", "form-control"] } ] } ]
+          SubmitText = "Log on" }
+          
+]
 //let formTextInput id placeholder = 
 //    divAttr ["class", "form-group"] [
 //                label [For id; Class ["col-sm-2"; "control-label"]] [text placeholder]

@@ -61,6 +61,7 @@
     <Compile Include="Users.fs" />
     <Compile Include="Streams.fs" />
     <Compile Include="Paths.fs" />
+    <Compile Include="Forms.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Actions.fs" />
     <Compile Include="Program.fs" />
